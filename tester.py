@@ -1,39 +1,27 @@
+import matplotlib.pyplot as plt
+from scipy.special import gamma
 import numpy as np
 
-fileName = "test.txt"
-data = np.loadtxt(fileName, str)
+x = np.linspace(0,28,100)
+sigma = [0.5, 1.0, 2.0, 5.0]
 
+def f(x, sigma): 
+    return 1/(2*sigma*sqrt(2*np.pi))*np.exp(-(x-0)**2/2*sigma)
+fmax = np.zeros(2)
 
-with open(fileName, 'r') as file:
-    lines = file.readlines()
+import plotly.express as px
+import pandas as pd
+import plotly.io as pio
 
+data = pd.read_csv("Data/weekEarthquakes.csv")
 
-result = []
-for i in range(0, len(data), 1):
-    result.append(data[i][1].split(","))
-    #print(result)
-    i = i + 1
+# look up loadtxt vs gettxt
+# drop rows with missing or invalid values in file
+data = data.dropna(subset=["mag"])
+data = data[data.mag >= 0]
 
-print("i equals ",i)
-for k in range(0, len(result), 1):
-    for j in range(0, len(result[k]), 1):
-        
-        if result[k][j] == '"NULL':
-            deletedLines = lines.pop(result[k])
-            k = k + 1
-            j = 0
+# cerate scatter map
+fig = px.scatter_geo(data, lat = "latitude", lon = "longitude", color = "mag", 
+                      hover_name = "place", size= "mag")
 
-
-i = 0
-for i in range(len(lines)):
-    with open("cleanfile.txt", "w") as file:
-        file.write(lines[i])
-        print("wrote to the file")
-        i = i + 1
-
-
-# if result[1] == '"NULL"':
-#     print("null!!!")
-# else:
-#     print("oh well")
-# print(result[1])
+pio.write_html(fig, file="earthquakes.html", auto_open=True)

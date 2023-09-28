@@ -1,16 +1,18 @@
-import plotly.express as px
-import pandas as pd
-import plotly.io as pio
+# c. Plot the data and the model curve(linear regression)
+def graphing():
+    answer = linReg(days, amtO2)
 
-data = pd.read_csv("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv")
+    A = answer[0]
+    B = answer[2]
+    unc_A = answer[1]
+    unc_B = answer[3]
+    xc = np.linspace(days[0], days[-1], 100)
+    y = A + B * xc
 
-# look up loadtxt vs gettxt
-# drop rows with missing or invalid values in file
-data = data.dropna(subset=["mag"])
-data = data[data.mag >= 0]
+    plt.xlabel("days")
+    plt.ylabel("O2 Amount(mm)")
+    plt.scatter(days, amtO2, marker="o", c="darkgreen", s=2, label= "Days vs O2 Amount")
+    plt.plot(xc, y, "brown", label = "Line of Best Fit")
+    plt.show()
 
-# cerate scatter map
-fig = px.scatter_geo(data, lat = "latitude", lon = "longitude", color = "mag", 
-                      hover_name = "place", size= "mag")
-
-pio.write_html(fig, file="earthquakes.html", auto_open=True)
+graphing()

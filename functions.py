@@ -3,25 +3,25 @@ import matplotlib.pyplot as plt
 from scipy.special import gamma
 
 # create indep. variable
-x = np.linspace(0, 28, 100)
-nu = [4,10]
+x = np.linspace(-6, 6, 100)
+sigma = [0.5, 1.0, 2.0, 5.0]
 
-def funk(x, nu):
-    return 1/((2**(nu/2)) * gamma(nu/2)) * np.exp(-x/2)*(x**((nu/2) - 1))
+def funk(x, sigma):
+    return 1/(2*sigma*np.sqrt(2*np.pi)) * np.exp(-(x-0)**2/(2*sigma))
 
-fmax = np.zeros(2)
-xmax = np.zeros(2)
+fmax = np.zeros(4)
+xmax = np.zeros(4)
 
 j = 0
-for i in nu:
+for i in sigma:
     y = funk(x, i)
     fmax[j] = np.amax(y)
     xmax[j] = x[np.argmax(y)]
     plt.plot(x, y)
-    plt.text(15, 0.15 - j *0.01, r"$\nu$ = %i Max = %.2f, at %.2f" % (i, fmax[j], xmax[j]))
+    plt.text(15, 0.15 - j *0.01, r"$\sigma$ = %i Max = %.2f, at %.2f" % (i, fmax[j], xmax[j]))
     j = j + 1
 
-plt.title(r"$\chi^{2}$ Probability Curve for $\nu = 4, 10$")
+plt.title(r"$\chi^{2}$ Probability Curve for $\sigma = 4, 10$")
 plt.xlabel(r"#\chi^2$")
 plt.ylabel(r"$f(\chi^2$)")
 plt.show()
